@@ -37,3 +37,7 @@ func (receiver Invoice) String() string {
 func (receiver Invoice) Json() ([]byte, error) {
 	return json.Marshal(receiver)
 }
+
+func (receiver Invoice) GetID() string {
+	return receiver.ID
+}

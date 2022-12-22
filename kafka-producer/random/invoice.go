@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func Invoice() model.Invoice {
+func Invoice() model.Info {
 	invoice := model.Invoice{
 		ID:          uuid.NewString(),
 		Issued:      time.Now(),

@@ -3,7 +3,7 @@ package kafkaProducer
 import (
 	"context"
 	"github.com/segmentio/kafka-go"
-	"kafka-producer/random"
+	"kafka-producer/model"
 	"log"
 	"sync"
 	"time"
@@ -13,6 +13,7 @@ type KafkaProducer struct {
 	Address string
 	Topic   string
 	Delay   time.Duration
+	Random  func() model.Info
 	writer  *kafka.Writer
 }
 
@@ -49,7 +50,7 @@ func (receiver *KafkaProducer) Write(ctx context.Context, wg *sync.WaitGroup) {
 		default:
 			if time.Now().After(t.Add(receiver.Delay)) {
 				t = time.Now()
-				err := receiver.writeRandom()
+				err := receiver.write()
 				if err != nil {
 					log.Printf("error with write: %v", err)
 				}
@@ -59,12 +60,12 @@ func (receiver *KafkaProducer) Write(ctx context.Context, wg *sync.WaitGroup) {
 	}
 }
 
-func (receiver *KafkaProducer) writeRandom() error {
+func (receiver *KafkaProducer) write() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	invoice := random.Invoice()
-	log.Printf("writing invoice with id: %s", invoice.ID)
+	invoice := receiver.Random()
+	log.Printf("writing %T with id: %s", invoice, invoice.GetID())
 
 	inv, err := invoice.Json()
 	if err != nil {
@@ -72,7 +73,7 @@ func (receiver *KafkaProducer) writeRandom() error {
 	}
 
 	return receiver.writer.WriteMessages(ctx, kafka.Message{
-		Key:   []byte(invoice.ID),
+		Key:   []byte(invoice.GetID()),
 		Value: inv,
 	})
 }

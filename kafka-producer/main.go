@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	producer "kafka-producer/producer"
+	"kafka-producer/random"
 	"log"
 	"os"
 	"os/signal"
@@ -16,6 +17,7 @@ func main() {
 		Address: "localhost:9092",
 		Topic:   "kafka-invoices",
 		Delay:   2 * time.Second,
+		Random:  random.Invoice,
 	}
 
 	err := pro.Init()
