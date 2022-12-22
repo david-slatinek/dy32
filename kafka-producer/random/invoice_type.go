@@ -2,9 +2,9 @@ package random
 
 import "kafka-producer/model"
 
-const Size = 3
+var Size = len(Types)
 
-var Types = [3]model.InvoiceType{
+var Types = []model.InvoiceType{
 	{
 		ID:   1,
 		Type: String(5, 10),

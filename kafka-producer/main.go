@@ -12,32 +12,42 @@ import (
 	"time"
 )
 
-func main() {
-	pro := producer.KafkaProducer{
-		Address: "localhost:9092",
+const address = "localhost:9092"
+
+var producers = []producer.KafkaProducer{
+	{
+		Address: address,
 		Topic:   "kafka-invoices",
 		Delay:   2 * time.Second,
 		Random:  random.Invoice,
-	}
+	},
+}
 
-	err := pro.Init()
-	if err != nil {
-		log.Fatalf("failed to dial leader: %v", err)
-	}
-	defer func(pro producer.KafkaProducer) {
-		if err := pro.Close(); err != nil {
-			log.Printf("failed to close writer: %v", err)
+func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	var wg sync.WaitGroup
+
+	for k, v := range producers {
+		err := v.Init()
+		if err != nil {
+			log.Printf("index=%d, failed to dial leader: %v", k, err)
+			continue
 		}
-	}(pro)
+		defer func(v producer.KafkaProducer) {
+			if err := v.Close(); err != nil {
+				log.Printf("failed to close writer: %v", err)
+			}
+		}(v)
+		wg.Add(1)
+		go v.Write(ctx, &wg)
+	}
 
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGKILL, syscall.SIGTERM)
 
-	ctx, cancel := context.WithCancel(context.Background())
-
 	go func() {
 		sig := <-signals
-		log.Println("got signal: ", sig)
+		log.Printf("got signal: %v", sig)
 		log.Println("signaling other goroutines ...")
 		cancel()
 
@@ -53,9 +63,5 @@ func main() {
 		}
 	}()
 
-	var wg sync.WaitGroup
-	wg.Add(1)
-
-	go pro.Write(ctx, &wg)
 	wg.Wait()
 }
