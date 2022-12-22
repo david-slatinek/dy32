@@ -13,9 +13,9 @@ import (
 
 func main() {
 	pro := producer.KafkaProducer{
-		Address:   "localhost:9092",
-		Topic:     "kafka-invoices",
-		Partition: 0,
+		Address: "localhost:9092",
+		Topic:   "kafka-invoices",
+		Delay:   2 * time.Second,
 	}
 
 	err := pro.Init()
@@ -35,17 +35,18 @@ func main() {
 
 	go func() {
 		sig := <-signals
-		log.Println("Got signal: ", sig)
-		log.Println("Signaling other goroutines ...")
+		log.Println("got signal: ", sig)
+		log.Println("signaling other goroutines ...")
 		cancel()
 
-		log.Println("Waiting for 5 seconds ...")
+		log.Println("waiting for 5 seconds ...")
 
 		ctx2, cancel2 := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel2()
 
 		select {
 		case <-ctx2.Done():
+			log.Println("exiting")
 			os.Exit(0)
 		}
 	}()
@@ -55,16 +56,4 @@ func main() {
 
 	go pro.Write(ctx, &wg)
 	wg.Wait()
-
-	//for {
-	//	invoice := util.RandomInvoice()
-	//	log.Println("Writing invoice with id: ", invoice.ID)
-	//
-	//	err = pro.Write()
-	//	if err != nil {
-	//		log.Println("error with write: ", err)
-	//	}
-	//
-	//	time.Sleep(2 * time.Second)
-	//}
 }
