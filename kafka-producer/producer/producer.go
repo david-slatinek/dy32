@@ -3,7 +3,7 @@ package kafkaProducer
 import (
 	"context"
 	"github.com/segmentio/kafka-go"
-	"kafka-producer/util"
+	"kafka-producer/random"
 	"log"
 	"sync"
 	"time"
@@ -51,7 +51,7 @@ func (receiver *KafkaProducer) Write(ctx context.Context, wg *sync.WaitGroup) {
 				t = time.Now()
 				err := receiver.writeRandom()
 				if err != nil {
-					log.Println("error with write: ", err)
+					log.Printf("error with write: %v", err)
 				}
 			}
 			break
@@ -63,8 +63,8 @@ func (receiver *KafkaProducer) writeRandom() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	invoice := util.RandomInvoice()
-	log.Println("Writing invoice with id: ", invoice.ID)
+	invoice := random.Invoice()
+	log.Printf("writing invoice with id: %s", invoice.ID)
 
 	inv, err := invoice.Json()
 	if err != nil {
