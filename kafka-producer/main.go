@@ -21,6 +21,12 @@ var producers = []producer.KafkaProducer{
 		Delay:   2 * time.Second,
 		Random:  random.Invoice,
 	},
+	{
+		Address: address,
+		Topic:   "kafka-customer",
+		Delay:   5 * time.Second,
+		Random:  random.Customer,
+	},
 }
 
 func main() {
@@ -28,18 +34,19 @@ func main() {
 	var wg sync.WaitGroup
 
 	for k, v := range producers {
-		err := v.Init()
+		p := v
+		err := p.Init()
 		if err != nil {
 			log.Printf("index=%d, failed to dial leader: %v", k, err)
 			continue
 		}
-		defer func(v producer.KafkaProducer) {
-			if err := v.Close(); err != nil {
+		defer func(p producer.KafkaProducer) {
+			if err := p.Close(); err != nil {
 				log.Printf("failed to close writer: %v", err)
 			}
-		}(v)
+		}(p)
 		wg.Add(1)
-		go v.Write(ctx, &wg)
+		go p.Write(ctx, &wg)
 	}
 
 	signals := make(chan os.Signal, 1)
@@ -50,7 +57,7 @@ func main() {
 		log.Printf("got signal: %v", sig)
 		log.Println("signaling other goroutines ...")
 		cancel()
-
+		
 		log.Println("waiting for 5 seconds ...")
 
 		ctx2, cancel2 := context.WithTimeout(context.Background(), 5*time.Second)
