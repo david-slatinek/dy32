@@ -18,7 +18,7 @@ func Invoice() model.Info {
 	count := Int(3, 5)
 
 	for i := 0; i < count; i++ {
-		p := purchase()
+		p := Purchase().(model.Purchase)
 		invoice.PurchaseList = append(invoice.PurchaseList, p)
 		invoice.TotalSum += invoice.TotalSum + p.PartialSum
 	}
