@@ -27,6 +27,12 @@ var producers = []producer.KafkaProducer{
 		Delay:   5 * time.Second,
 		Random:  random.Customer,
 	},
+	{
+		Address: address,
+		Topic:   "kafka-purchase",
+		Delay:   1 * time.Second,
+		Random:  random.Purchase,
+	},
 }
 
 func main() {
@@ -57,7 +63,7 @@ func main() {
 		log.Printf("got signal: %v", sig)
 		log.Println("signaling other goroutines ...")
 		cancel()
-		
+
 		log.Println("waiting for 5 seconds ...")
 
 		ctx2, cancel2 := context.WithTimeout(context.Background(), 5*time.Second)

@@ -64,16 +64,16 @@ func (receiver *KafkaProducer) write() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	invoice := receiver.Random()
-	log.Printf("writing %T with id: %s", invoice, invoice.GetID())
+	obj := receiver.Random()
+	log.Printf("writing %T with id: %s", obj, obj.GetID())
 
-	inv, err := invoice.Json()
+	inv, err := obj.Json()
 	if err != nil {
 		return err
 	}
 
 	return receiver.writer.WriteMessages(ctx, kafka.Message{
-		Key:   []byte(invoice.GetID()),
+		Key:   []byte(obj.GetID()),
 		Value: inv,
 	})
 }

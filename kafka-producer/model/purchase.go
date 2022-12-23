@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -11,6 +12,14 @@ type Purchase struct {
 	Price       float64 `json:"price"`
 	PartialSum  float64 `json:"partialSum"`
 	FkEquipment string  `json:"fkEquipment"`
+}
+
+func (receiver Purchase) Json() ([]byte, error) {
+	return json.Marshal(receiver)
+}
+
+func (receiver Purchase) GetID() string {
+	return receiver.ID
 }
 
 func (receiver Purchase) String() string {
