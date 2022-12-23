@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 )
 
 type Invoice struct {
 	ID           string      `json:"id"`
-	Issued       time.Time   `json:"issued"`
+	Issued       string      `json:"issued"`
 	InvoiceType  InvoiceType `json:"invoiceType"`
 	FkCustomer   string      `json:"fkCustomer"`
 	PurchaseList []Purchase  `json:"purchaseList"`
@@ -20,7 +19,8 @@ func (receiver Invoice) String() string {
 	var sb strings.Builder
 
 	sb.WriteString("ID: " + receiver.ID)
-	sb.WriteString("\nIssued: " + receiver.Issued.String())
+	//sb.WriteString("\nIssued: " + receiver.Issued.String())
+	sb.WriteString("\nIssued: " + receiver.Issued)
 	sb.WriteString("\nInvoiceType:\n" + receiver.InvoiceType.String())
 	sb.WriteString("\nFkCustomer: " + receiver.FkCustomer)
 	sb.WriteString("\nTotalSum: " + fmt.Sprintf("%.2f", receiver.TotalSum))

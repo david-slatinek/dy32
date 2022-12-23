@@ -4,18 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 )
 
 type Equipment struct {
-	ID             string    `json:"id"`
-	Description    string    `json:"description"`
-	Weight         string    `json:"weight"`
-	Size           string    `json:"size"`
-	RadiationLevel string    `json:"radiationLevel"`
-	ProductionDate time.Time `json:"productionDate"`
-	Quantity       int       `json:"quantity"`
-	EquipmentType  string    `json:"equipmentType"`
+	ID             string `json:"id"`
+	Description    string `json:"description"`
+	Weight         string `json:"weight"`
+	Size           string `json:"size"`
+	RadiationLevel string `json:"radiationLevel"`
+	ProductionDate string `json:"productionDate"`
+	Quantity       int    `json:"quantity"`
+	EquipmentType  string `json:"equipmentType"`
 }
 
 func (receiver Equipment) String() string {
@@ -26,7 +25,7 @@ func (receiver Equipment) String() string {
 	sb.WriteString("\nWeight: " + receiver.Weight)
 	sb.WriteString("\nSize: " + receiver.Size)
 	sb.WriteString("\nRadiationLevel: " + receiver.RadiationLevel)
-	sb.WriteString("\nProductionDate: " + receiver.ProductionDate.String())
+	sb.WriteString("\nProductionDate: " + receiver.ProductionDate)
 	sb.WriteString("\nQuantity: " + fmt.Sprintf("%d", receiver.Quantity))
 	sb.WriteString("\nEquipmentType: " + receiver.EquipmentType)
 

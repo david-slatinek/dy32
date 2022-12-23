@@ -4,15 +4,16 @@ import (
 	"github.com/google/uuid"
 	"main/model"
 	"math/rand"
+	"strings"
 	"time"
 )
 
 func Invoice() model.Info {
 	invoice := model.Invoice{
-		ID:          uuid.NewString(),
-		Issued:      time.Now(),
+		ID:          strings.ReplaceAll(uuid.NewString(), "-", ""),
+		Issued:      time.Now().Format("2006-01-02 15:04:05"),
 		InvoiceType: Types[rand.Intn(Size)],
-		FkCustomer:  uuid.NewString(),
+		FkCustomer:  strings.ReplaceAll(uuid.NewString(), "-", ""),
 	}
 
 	count := Int(3, 5)

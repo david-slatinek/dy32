@@ -3,11 +3,12 @@ package random
 import (
 	"github.com/google/uuid"
 	"main/model"
+	"strings"
 )
 
 func Customer() model.Info {
 	return model.Customer{
-		ID:           uuid.NewString(),
+		ID:           strings.ReplaceAll(uuid.NewString(), "-", ""),
 		Name:         String(5, 10),
 		Lastname:     String(5, 15),
 		StreetName:   String(5, 8),
