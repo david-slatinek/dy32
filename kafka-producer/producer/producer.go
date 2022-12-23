@@ -3,8 +3,8 @@ package kafkaProducer
 import (
 	"context"
 	"github.com/segmentio/kafka-go"
-	"kafka-producer/model"
 	"log"
+	"main/model"
 	"sync"
 	"time"
 )

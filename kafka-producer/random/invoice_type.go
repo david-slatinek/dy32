@@ -1,6 +1,6 @@
 package random
 
-import "kafka-producer/model"
+import "main/model"
 
 var Size = len(Types)
 

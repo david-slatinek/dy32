@@ -2,7 +2,7 @@ package random
 
 import (
 	"github.com/google/uuid"
-	"kafka-producer/model"
+	"main/model"
 	"math/rand"
 	"time"
 )

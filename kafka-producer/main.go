@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	producer "kafka-producer/producer"
-	"kafka-producer/random"
 	"log"
+	producer "main/producer"
+	"main/random"
 	"os"
 	"os/signal"
 	"sync"
