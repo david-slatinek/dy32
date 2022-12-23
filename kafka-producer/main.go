@@ -33,6 +33,12 @@ var producers = []producer.KafkaProducer{
 		Delay:   1 * time.Second,
 		Random:  random.Purchase,
 	},
+	{
+		Address: address,
+		Topic:   "kafka-equipment",
+		Delay:   3 * time.Second,
+		Random:  random.Equipment,
+	},
 }
 
 func main() {
