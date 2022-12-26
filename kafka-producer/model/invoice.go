@@ -19,7 +19,6 @@ func (receiver Invoice) String() string {
 	var sb strings.Builder
 
 	sb.WriteString("ID: " + receiver.ID)
-	//sb.WriteString("\nIssued: " + receiver.Issued.String())
 	sb.WriteString("\nIssued: " + receiver.Issued)
 	sb.WriteString("\nInvoiceType:\n" + receiver.InvoiceType.String())
 	sb.WriteString("\nFkCustomer: " + receiver.FkCustomer)
