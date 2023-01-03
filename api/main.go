@@ -107,6 +107,7 @@ func main() {
 	mongoGroup := router.Group("/mongo")
 	{
 		mongoGroup.POST("/invoice", invoiceController.CreateMongo)
+		mongoGroup.GET("/invoice", invoiceController.GetById)
 	}
 
 	srv := &http.Server{

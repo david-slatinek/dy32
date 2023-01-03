@@ -8,3 +8,7 @@ type InvoiceRequest struct {
 	PurchaseList []model.Purchase  `json:"purchaseList"`
 	TotalSum     float32           `json:"totalSum"`
 }
+
+type IDRequest struct {
+	ID string `json:"id"`
+}
