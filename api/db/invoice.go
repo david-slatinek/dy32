@@ -74,3 +74,21 @@ func (receiver InvoiceCollection) GetAll() ([]model.Invoice, error) {
 	}
 	return invoices, cur.Err()
 }
+
+func (receiver InvoiceCollection) Replace(invoice model.Invoice) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	id, err := primitive.ObjectIDFromHex(invoice.ID)
+	if err != nil {
+		return -1, err
+	}
+
+	invoice.ID = ""
+
+	res, err := receiver.Collection.ReplaceOne(ctx, bson.M{"_id": id}, invoice)
+	if err != nil {
+		return -1, err
+	}
+	return int(res.ModifiedCount), nil
+}

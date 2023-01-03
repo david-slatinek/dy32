@@ -110,6 +110,7 @@ func main() {
 		mongoGroup.GET("/invoice", invoiceController.GetById)
 		mongoGroup.DELETE("/invoice/:id", invoiceController.DeleteById)
 		mongoGroup.GET("/invoices", invoiceController.GetAll)
+		mongoGroup.PUT("/invoice", invoiceController.Update)
 	}
 
 	srv := &http.Server{

@@ -110,3 +110,18 @@ func (receiver InvoiceController) GetAll(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, inv)
 }
+
+func (receiver InvoiceController) Update(ctx *gin.Context) {
+	var invoice model.Invoice
+	if err := ctx.ShouldBindJSON(&invoice); err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	count, err := receiver.Collection.Replace(invoice)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, map[string]int{"modified": count})
+}
