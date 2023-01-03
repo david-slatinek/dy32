@@ -40,3 +40,11 @@ func (receiver InvoiceCollection) GetById(id primitive.ObjectID) (model.Invoice,
 	err := receiver.Collection.FindOne(ctx, bson.M{"_id": id}).Decode(&result)
 	return result, err
 }
+
+func (receiver InvoiceCollection) DeleteById(id primitive.ObjectID) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := receiver.Collection.DeleteOne(ctx, bson.M{"_id": id})
+	return err
+}

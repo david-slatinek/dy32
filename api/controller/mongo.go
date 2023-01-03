@@ -80,3 +80,24 @@ func (receiver InvoiceController) GetById(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, invoice)
 }
+
+func (receiver InvoiceController) DeleteById(ctx *gin.Context) {
+	hId := ctx.Param("id")
+	if hId == "" {
+		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{Error: "id not specified"})
+		return
+	}
+
+	id, err := stringToObjectID(hId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	err = receiver.Collection.DeleteById(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
+		return
+	}
+	ctx.Status(http.StatusNoContent)
+}
