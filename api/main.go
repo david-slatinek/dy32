@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"log"
+	"main/consumer"
 	"main/controller"
 	"main/producer"
 	"net/http"
@@ -47,7 +48,7 @@ func main() {
 
 	err := pro.Init()
 	if err != nil {
-		log.Printf("failed to dial leader: %v", err)
+		log.Fatalf("failed to dial leader: %v", err)
 	}
 	defer func(p producer.KafkaProducer) {
 		if err := p.Close(); err != nil {
@@ -55,12 +56,29 @@ func main() {
 		}
 	}(pro)
 
+	reader := consumer.KafkaConsumer{
+		Address: "localhost:9092",
+		Topic:   "kafka-invoices",
+	}
+
+	err = reader.Init()
+	if err != nil {
+		log.Fatalf("failed to dial leader: %v", err)
+	}
+	defer func(c consumer.KafkaConsumer) {
+		if err := c.Close(); err != nil {
+			log.Printf("failed to close reader: %v", err)
+		}
+	}(reader)
+
 	invoiceController := controller.InvoiceController{
 		Producer: pro,
+		Consumer: reader,
 	}
 
 	router := gin.Default()
 	router.POST("/invoice", invoiceController.Create)
+	router.GET("/invoice", invoiceController.Read)
 
 	srv := &http.Server{
 		Addr:         ":8080",
@@ -71,7 +89,6 @@ func main() {
 	}
 
 	go func() {
-		log.Println("server is up at: " + srv.Addr)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Printf("ListenAndServe() error: %s\n", err)
 		}

@@ -23,9 +23,10 @@ func (receiver *KafkaConsumer) Init() error {
 	}
 
 	receiver.reader = kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{receiver.Address},
-		Topic:     receiver.Topic,
-		Partition: 0,
+		Brokers:     []string{receiver.Address},
+		Topic:       receiver.Topic,
+		Partition:   0,
+		StartOffset: kafka.LastOffset,
 	})
 	return nil
 }

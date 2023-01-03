@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"context"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"main/consumer"
 	"main/model"
 	"main/producer"
 	"main/request"
@@ -13,6 +16,7 @@ import (
 
 type InvoiceController struct {
 	Producer producer.KafkaProducer
+	Consumer consumer.KafkaConsumer
 }
 
 func (receiver InvoiceController) Create(ctx *gin.Context) {
@@ -37,4 +41,20 @@ func (receiver InvoiceController) Create(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusCreated, map[string]string{"id": invoice.ID})
+}
+
+func (receiver InvoiceController) Read(ctx *gin.Context) {
+	inv, err := receiver.Consumer.Read()
+
+	if errors.Is(err, context.DeadlineExceeded) {
+		ctx.JSON(http.StatusNotFound, response.ErrorResponse{Error: "no new data"})
+		return
+	}
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, inv)
 }
