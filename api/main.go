@@ -1,8 +1,17 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"github.com/gin-gonic/gin"
 	"log"
+	"main/controller"
 	"main/producer"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
@@ -46,4 +55,37 @@ func main() {
 		}
 	}(pro)
 
+	invoiceController := controller.InvoiceController{
+		Producer: pro,
+	}
+
+	router := gin.Default()
+	router.POST("/invoice", invoiceController.Create)
+
+	srv := &http.Server{
+		Addr:         ":8080",
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+		Handler:      router,
+	}
+
+	go func() {
+		log.Println("server is up at: " + srv.Addr)
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Printf("ListenAndServe() error: %s\n", err)
+		}
+	}()
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
+	<-c
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Printf("Shutdown() error: %s\n", err)
+	}
+	log.Println("shutting down")
 }
