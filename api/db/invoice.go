@@ -5,17 +5,19 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"main/model"
-	"main/util"
+	"time"
 )
 
 type InvoiceCollection struct {
 	Collection *mongo.Collection
-	Context    context.Context
 }
 
 func (receiver InvoiceCollection) Create(invoice model.Invoice) (string, error) {
-	id, err := receiver.Collection.InsertOne(receiver.Context, invoice)
-	return util.IDToString(id), err
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	id, err := receiver.Collection.InsertOne(ctx, invoice)
+	return id.InsertedID.(string), err
 }
 
 func (receiver InvoiceCollection) PrettyPrint(invoices []model.Invoice) {
