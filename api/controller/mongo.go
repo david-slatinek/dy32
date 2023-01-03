@@ -101,3 +101,12 @@ func (receiver InvoiceController) DeleteById(ctx *gin.Context) {
 	}
 	ctx.Status(http.StatusNoContent)
 }
+
+func (receiver InvoiceController) GetAll(ctx *gin.Context) {
+	inv, err := receiver.Collection.GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, inv)
+}
