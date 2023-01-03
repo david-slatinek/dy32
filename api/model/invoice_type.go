@@ -3,8 +3,8 @@ package model
 import "fmt"
 
 type InvoiceType struct {
-	ID   int    `json:"id"`
-	Type string `json:"type"`
+	ID   int    `bson:"id" json:"id"`
+	Type string `bson:"type" json:"type"`
 }
 
 func (receiver InvoiceType) String() string {

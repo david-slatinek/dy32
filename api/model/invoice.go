@@ -3,27 +3,26 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"strings"
 	"time"
 )
 
 type Invoice struct {
-	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	Issued       time.Time          `bson:"issued" json:"issued"`
-	InvoiceType  InvoiceType        `bson:"invoiceType" json:"invoiceType"`
-	FkCustomer   primitive.ObjectID `bson:"fkCustomer" json:"fkCustomer"`
-	PurchaseList []Purchase         `bson:"purchase" json:"purchaseList"`
-	TotalSum     float32            `bson:"totalSum" json:"totalSum"`
+	ID           string      `bson:"_id,omitempty" json:"id,omitempty"`
+	Issued       time.Time   `bson:"issued" json:"issued"`
+	InvoiceType  InvoiceType `bson:"invoiceType" json:"invoiceType"`
+	FkCustomer   string      `bson:"fkCustomer" json:"fkCustomer"`
+	PurchaseList []Purchase  `bson:"purchase" json:"purchaseList"`
+	TotalSum     float32     `bson:"totalSum" json:"totalSum"`
 }
 
 func (receiver Invoice) String() string {
 	var sb strings.Builder
 
-	sb.WriteString("ID: " + receiver.ID.String())
+	sb.WriteString("ID: " + receiver.ID)
 	sb.WriteString("\nIssued: " + receiver.Issued.String())
 	sb.WriteString("\nInvoiceType: " + receiver.InvoiceType.String())
-	sb.WriteString("\nFkCustomer: " + receiver.FkCustomer.String())
+	sb.WriteString("\nFkCustomer: " + receiver.FkCustomer)
 	sb.WriteString("\nTotalSum: " + fmt.Sprintf("%f", receiver.TotalSum))
 
 	sb.WriteString("\n\nPurchaseList\n")
@@ -33,6 +32,10 @@ func (receiver Invoice) String() string {
 	}
 
 	return sb.String()
+}
+
+func (receiver Invoice) ToJson() ([]byte, error) {
+	return json.Marshal(receiver)
 }
 
 func FromJson(data []byte) (Invoice, error) {
