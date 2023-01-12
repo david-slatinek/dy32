@@ -21,7 +21,7 @@ func (receiver InvoiceController) Create(ctx *gin.Context) {
 
 	invoice := model.Invoice{
 		ID:           uuid.NewString(),
-		Issued:       time.Now(),
+		Issued:       time.Now().Format("2006-01-02 15:04:05"),
 		InvoiceType:  req.InvoiceType,
 		FkCustomer:   req.FkCustomer,
 		PurchaseList: req.PurchaseList,

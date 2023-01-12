@@ -38,7 +38,7 @@ func (receiver InvoiceController) CreateMongo(ctx *gin.Context) {
 	}
 
 	invoice := model.Invoice{
-		Issued:       time.Now(),
+		Issued:       time.Now().Format("2006-01-02 15:04:05"),
 		InvoiceType:  req.InvoiceType,
 		FkCustomer:   req.FkCustomer,
 		PurchaseList: req.PurchaseList,
