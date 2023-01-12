@@ -12,6 +12,7 @@ func Purchase() model.Info {
 		Quantity:    Int(3, 10),
 		Price:       Float(10, 2000),
 		FkEquipment: strings.ReplaceAll(uuid.NewString(), "-", ""),
+		//FkEquipment: "1",
 	}
 	p.PartialSum = float64(p.Quantity) * p.Price
 	return p
