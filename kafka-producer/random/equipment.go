@@ -9,7 +9,6 @@ import (
 
 func Equipment() model.Info {
 	return model.Equipment{
-		//ID: "1",
 		ID:             strings.ReplaceAll(uuid.NewString(), "-", ""),
 		Description:    String(5, 30),
 		Weight:         String(1, 5),
