@@ -33,7 +33,7 @@ func (receiver InvoiceController) Create(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, map[string]string{"id": invoice.ID})
+	ctx.JSON(http.StatusCreated, gin.H{"id": invoice.ID})
 }
 
 func (receiver InvoiceController) Read(ctx *gin.Context) {
@@ -48,6 +48,5 @@ func (receiver InvoiceController) Read(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
 		return
 	}
-
 	ctx.JSON(http.StatusOK, invoice)
 }

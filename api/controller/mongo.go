@@ -50,8 +50,7 @@ func (receiver InvoiceController) CreateMongo(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
 		return
 	}
-
-	ctx.JSON(http.StatusOK, map[string]string{"id": id.Hex()})
+	ctx.JSON(http.StatusOK, gin.H{"id": id.Hex()})
 }
 
 func (receiver InvoiceController) GetById(ctx *gin.Context) {
@@ -77,7 +76,6 @@ func (receiver InvoiceController) GetById(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
 		return
 	}
-
 	ctx.JSON(http.StatusOK, invoice)
 }
 
@@ -123,5 +121,5 @@ func (receiver InvoiceController) Update(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ErrorResponse{Error: err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusOK, map[string]int{"modified": count})
+	ctx.JSON(http.StatusOK, gin.H{"modified": count})
 }

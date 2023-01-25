@@ -23,6 +23,5 @@ func Invoice() model.Info {
 		invoice.PurchaseList = append(invoice.PurchaseList, p)
 		invoice.TotalSum += invoice.TotalSum + p.PartialSum
 	}
-
 	return invoice
 }
